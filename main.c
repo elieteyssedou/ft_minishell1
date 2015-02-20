@@ -14,14 +14,16 @@
 
 int main(int ac, char **av, char **env)
 {
+	ac = ac;
+	av = av;
 	char *line;
+	t_list *env_list;
 
-	//while (*env)
-	// 	printf("%s\n", *env++);
-	get_path(env);
+	env_list = get_path(env);
 	while (42)
 	{
 		ft_putstr("$>");
+		print_prompt(env_list);
 		get_next_line(0, &line);
 		exec(ft_strsplit(ft_strtrim(line), ' '));
 	}
@@ -39,42 +41,7 @@ int exec(char **argv)
 	return (0);
 }
 
-void	get_path(char **env)
+void	print_prompt(t_list *env_list)
 {
-	int i;
-	t_list *env_list;
-
-	i = 0;
-	env_list = NULL;
-	while (env[i])
-	{
-		fill_list(env[i], &env_list);
-		i++;
-	}
-	print_env(env_list);
-}
-
-t_list	fill_list(char *line, t_list **env_list)
-{
-	t_var_list	var;
-
-	var.key = ft_strcut(line, '=');
-	var.data = ft_strdup(ft_strchr(line, '=') + 1);
-	ft_lstsmartpushback(env_list,
-		ft_lstnew(&var, (sizeof(t_var_list))));
-}
-
-void	print_env(t_list *env_list)
-{
-	t_var_list *var;
-
-	while (env_list)
-	{
-		var = env_list->content;
-		ft_putstr(var->key);
-		ft_putstr("=");
-		ft_putstr(var->data);
-		ft_putstr("\n");
-		env_list = env_list->next;
-	}
+	
 }

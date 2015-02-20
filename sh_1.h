@@ -14,6 +14,7 @@
 # define SH_1_H
 
 # include "libft/libft.h"
+# include "libft/get_next_line.h"
 # include <sys/wait.h>
 # include <stdio.h> //a enlever
 
@@ -24,8 +25,8 @@ typedef	struct		s_var_list
 }					t_var_list;
 
 int		exec(char **argv);
-void	get_path(char **env);
-t_list	fill_list(char *line, t_list **env_list);
+t_list*	get_path(char **env);
+void	fill_list(char *line, t_list **env_list);
 void	print_env(t_list *env_list);
 
 #endif
