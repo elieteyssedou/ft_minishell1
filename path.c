@@ -33,7 +33,7 @@ void	fill_list(char *line, t_list **env_list)
 	t_var_list	var;
 
 	var.key = ft_strcut(line, '=');
-	var.data = ft_strdup(ft_strchr(line, '=') + 1);
+	var.data = ft_strchr(line, '=') + 1;
 	ft_lstsmartpushback(env_list,
 		ft_lstnew(&var, (sizeof(t_var_list))));
 }

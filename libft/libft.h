@@ -84,5 +84,6 @@ void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 char				*ft_strcut(char *str, char c);
 void				ft_lstpushback(t_list **start, t_list *new);
 void				ft_lstsmartpushback(t_list **start, t_list *new);
+char				*ft_burger(const char *s1, char c, const char *s2);
 
 #endif

@@ -38,3 +38,22 @@ char	*good_path(char *name, t_var_list *var)
 	return (NULL);
 }
 
+t_var_list	*good_var(t_list *env_list, char *key)
+{
+	t_var_list	*var;
+	t_var_list	*no_var;
+	t_list		*tmp;
+	
+	no_var = (t_var_list *)malloc(sizeof(*no_var));
+	no_var->key = ft_strdup("NULL");
+	no_var->data = ft_strdup("NULL");
+
+	tmp = env_list;
+	if (env_list)
+		var = tmp->content;
+	while (env_list && tmp->next && ft_strcmp(var->key, key))
+		tmp = tmp->next, var = tmp->content;
+	if (!env_list || !tmp->next)
+		return (no_var);
+	return (var);
+}
