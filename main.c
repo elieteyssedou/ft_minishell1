@@ -14,8 +14,8 @@
 
 int 	main(int ac, char **av, char **env)
 {
-	ac = ac;
-	av = av;
+	(void)ac;
+	(void)av;
 	char *line;
 	char **argv;
 	t_list *env_list;
@@ -26,7 +26,7 @@ int 	main(int ac, char **av, char **env)
 		print_prompt(env_list);
 		get_next_line(0, &line);
 		argv = ft_strsplit(ft_strtrim(line), ' ');
-		//if (!command(argv, env_list))
+		if (!command(argv, env_list))
 			exec(argv, env_list);
 	}
 	return (0);
@@ -45,9 +45,10 @@ int		command(char **argv, t_list *env_list)
 
 void	cd(char **argv, t_list *env_list)
 {
-	t_var_list *old;
-	t_var_list *pwd;
-	t_var_list *home;
+	t_var_list	*old;
+	t_var_list	*pwd;
+	t_var_list	*home;
+	char		*mem;
 
 	old = good_var(env_list, "OLDPWD");
 	pwd = good_var(env_list, "PWD");
@@ -55,12 +56,68 @@ void	cd(char **argv, t_list *env_list)
 
 	if (!argv[1])
 	{
-		old->data = getcwd(old->data, 500);
+		old->data = pwd->data;
 		pwd->data = home->data;
 	}
+	else if (!ft_strcmp(argv[1], "..") && !ft_strcmp(pwd->data, "/"))
+		old->data = pwd->data;
+	else if (!ft_strcmp(argv[1], "..") && !ft_strcmp(pwd->data, "/nfs"))
+	{
+		old->data = pwd->data;
+		pwd->data = ft_strdup("/");
+	}
+	else if (!ft_strcmp(argv[1], ".."))
+	{
+		old->data = pwd->data;
+		pwd->data = ft_strrcut(pwd->data, '/');
+	}
+	else if (!ft_strcmp(argv[1], "-"))
+	{
+		mem = ft_strdup(old->data);
+		old->data = pwd->data;
+		pwd->data = mem;
+	}
+	else if (!ft_strcmp(argv[1], "."))
+		old->data = pwd->data;
+	else if (argv[1][0] == '~')
+	{
+		old->data = pwd->data;
+		pwd->data = ft_burger(home->data, '/', &argv[1][1]);
+	}
+	else if (!test_cd(ft_strcut(argv[1], '/')))
+	{
+		ft_putstr("cd: no such file or directory: ");
+		ft_putstr(argv[1]), ft_putchar('\n');
+	}
+	else
+	{
+		old->data = pwd->data;
+		pwd->data = ft_burger(pwd->data, '/', argv[1]);
+	}
+	chdir(pwd->data);
 }
 
-int exec(char **argv, t_list *env_list)
+int		test_cd(char *path)
+{
+	DIR *dirp;
+	struct dirent *dp;
+
+	dirp = opendir(".");
+	if (dirp == NULL)
+	        return (0);
+	while ((dp = readdir(dirp)) != NULL)
+	{
+		if (!ft_strcmp(dp->d_name, path))
+		{
+			(void)closedir(dirp);
+			return (1);
+		}
+	}
+	(void)closedir(dirp);
+	return (0);
+}
+
+int 	exec(char **argv, t_list *env_list)
 {
 	pid_t father;
 	t_var_list	*var;

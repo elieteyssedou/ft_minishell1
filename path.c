@@ -24,7 +24,6 @@ t_list*	get_path(char **env)
 		fill_list(env[i], &env_list);
 		i++;
 	}
-	//print_env(env_list);
 	return (env_list);
 }
 

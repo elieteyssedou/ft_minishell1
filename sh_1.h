@@ -25,14 +25,15 @@ typedef	struct		s_var_list
 	char			*data;
 }					t_var_list;
 
-int		exec(char **argv, t_list *env_list);
-t_list*	get_path(char **env);
-void	fill_list(char *line, t_list **env_list);
-void	print_env(t_list *env_list);
-void	print_prompt(t_list *env_list);
-char*	good_path(char *name, t_var_list *var);
+int			exec(char **argv, t_list *env_list);
+t_list*		get_path(char **env);
+void		fill_list(char *line, t_list **env_list);
+void		print_env(t_list *env_list);
+void		print_prompt(t_list *env_list);
+char*		good_path(char *name, t_var_list *var);
 t_var_list	*good_var(t_list *env_list, char *key);
-int		command(char **argv, t_list *env_list);
-void	cd(char **argv, t_list *env_list);
+int			command(char **argv, t_list *env_list);
+void		cd(char **argv, t_list *env_list);
+int			test_cd(char *path);
 
 #endif

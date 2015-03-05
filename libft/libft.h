@@ -85,5 +85,6 @@ char				*ft_strcut(char *str, char c);
 void				ft_lstpushback(t_list **start, t_list *new);
 void				ft_lstsmartpushback(t_list **start, t_list *new);
 char				*ft_burger(const char *s1, char c, const char *s2);
+char				*ft_strrcut(char *str, char c);
 
 #endif
