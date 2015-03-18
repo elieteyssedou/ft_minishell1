@@ -51,3 +51,28 @@ void	print_env(t_list *env_list)
 		env_list = env_list->next;
 	}
 }
+
+char **env_to_str(t_list *env_list)
+{
+	t_list *tmp;
+	char **env_str;
+	int i;
+	t_var_list	*var;
+
+	i = 0;
+	tmp = env_list;
+	while (tmp)
+		i++, tmp = tmp->next;
+	if (!(env_str = malloc(sizeof(char **) * i + 1)))
+		return NULL;
+	env_str[i] = 0;
+	i = 0;
+	while (env_list)
+	{
+		var = env_list->content;
+		env_str[i] = ft_burger(var->key, '=', var->data);
+		i++;
+		env_list = env_list->next;
+	}
+	return (env_str);
+}

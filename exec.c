@@ -45,15 +45,46 @@ t_var_list	*good_var(t_list *env_list, char *key)
 	t_list		*tmp;
 	
 	no_var = (t_var_list *)malloc(sizeof(*no_var));
-	no_var->key = ft_strdup("NULL");
-	no_var->data = ft_strdup("NULL");
+	no_var->key = NULL;
+	no_var->data = NULL;
 
 	tmp = env_list;
 	if (env_list)
 		var = tmp->content;
-	while (env_list && tmp->next && ft_strcmp(var->key, key))
-		tmp = tmp->next, var = tmp->content;
-	if (!env_list || !tmp->next)
+	while (tmp && ft_strcmp(var->key, key))
+	{
+		tmp = tmp->next;
+		if (tmp)
+			var = tmp->content;
+	}
+	if (!env_list || !tmp)
 		return (no_var);
 	return (var);
+}
+
+void	del_list(t_list *env_list, char *key)
+{
+	t_var_list	*var;
+	t_list		*tmp;
+	t_list		*del;
+
+	tmp = env_list;
+	var = tmp->content;
+	while (tmp->next && ft_strcmp(var->key, key))
+	{
+		var = tmp->next->content;
+		if (ft_strcmp(var->key, key))
+			tmp = tmp->next;
+		else
+			break ;
+	}
+	if (!tmp->next)
+	{
+		return ;
+	}
+	del = tmp->next;
+	tmp->next = del->next;
+	printf("PASSE %d\n", (int)tmp);
+	free(del->content);
+	free(del);
 }

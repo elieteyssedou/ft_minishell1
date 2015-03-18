@@ -34,87 +34,20 @@ int 	main(int ac, char **av, char **env)
 
 int		command(char **argv, t_list *env_list)
 {
-	if (!ft_strcmp(argv[0], "cd"))
+	if (!argv[0])
+		return(1);
+	else if (!ft_strcmp(argv[0], "cd"))
 		cd(argv, env_list);
 	else if (!ft_strcmp(argv[0], "env"))
 		print_env(env_list);
+	else if (!ft_strcmp(argv[0], "setenv"))
+		set_env(argv, &env_list);
+	else if (!ft_strcmp(argv[0], "unsetenv"))
+		unset_env(argv, &env_list);
 	else
 		return (0);
 	return (1);
-}
 
-void	cd(char **argv, t_list *env_list)
-{
-	t_var_list	*old;
-	t_var_list	*pwd;
-	t_var_list	*home;
-	char		*mem;
-
-	old = good_var(env_list, "OLDPWD");
-	pwd = good_var(env_list, "PWD");
-	home = good_var(env_list, "HOME");
-
-	if (!argv[1])
-	{
-		old->data = pwd->data;
-		pwd->data = home->data;
-	}
-	else if (!ft_strcmp(argv[1], "..") && !ft_strcmp(pwd->data, "/"))
-		old->data = pwd->data;
-	else if (!ft_strcmp(argv[1], "..") && !ft_strcmp(pwd->data, "/nfs"))
-	{
-		old->data = pwd->data;
-		pwd->data = ft_strdup("/");
-	}
-	else if (!ft_strcmp(argv[1], ".."))
-	{
-		old->data = pwd->data;
-		pwd->data = ft_strrcut(pwd->data, '/');
-	}
-	else if (!ft_strcmp(argv[1], "-"))
-	{
-		mem = ft_strdup(old->data);
-		old->data = pwd->data;
-		pwd->data = mem;
-	}
-	else if (!ft_strcmp(argv[1], "."))
-		old->data = pwd->data;
-	else if (argv[1][0] == '~')
-	{
-		old->data = pwd->data;
-		pwd->data = ft_burger(home->data, '/', &argv[1][1]);
-	}
-	else if (!test_cd(ft_strcut(argv[1], '/')))
-	{
-		ft_putstr("cd: no such file or directory: ");
-		ft_putstr(argv[1]), ft_putchar('\n');
-	}
-	else
-	{
-		old->data = pwd->data;
-		pwd->data = ft_burger(pwd->data, '/', argv[1]);
-	}
-	chdir(pwd->data);
-}
-
-int		test_cd(char *path)
-{
-	DIR *dirp;
-	struct dirent *dp;
-
-	dirp = opendir(".");
-	if (dirp == NULL)
-	        return (0);
-	while ((dp = readdir(dirp)) != NULL)
-	{
-		if (!ft_strcmp(dp->d_name, path))
-		{
-			(void)closedir(dirp);
-			return (1);
-		}
-	}
-	(void)closedir(dirp);
-	return (0);
 }
 
 int 	exec(char **argv, t_list *env_list)
@@ -128,8 +61,48 @@ int 	exec(char **argv, t_list *env_list)
 	if (father > 0)
 		waitpid(father, 0, 0);
 	else if (father == 0)
-		execve(good_path(argv[0], var), argv, NULL);
+		execve(good_path(argv[0], var), argv, env_to_str(env_list));
 	return (0);
+}
+
+void	set_env(char **argv, t_list **env_list)
+{
+	t_var_list	*var;
+
+	if (argv[3])
+		ft_putstr("setenv: Too many arguments.\n");
+	if (!argv[1])
+		print_env(*env_list);
+	else if (argv[1])
+	{
+		var = good_var(*env_list, argv[1]);
+		if (!var->key)
+		{
+			var->key = argv[1];
+			var->data = argv[2];
+			ft_lstsmartpushback(env_list,
+			ft_lstnew(var, (sizeof(t_var_list))));
+		}
+		else
+			var->data = argv[2];
+	}
+}
+
+void	unset_env(char **argv, t_list **env_list)
+{
+	int i;
+
+	i = 1;
+	if (!argv[1])
+		ft_putstr("unsetenv: Too few arguments.\n");
+	else
+	{
+		while (argv[i])
+		{
+			del_list(*env_list, argv[i]);
+			i++;
+		}
+	}
 }
 
 void	print_prompt(t_list *env_list)
