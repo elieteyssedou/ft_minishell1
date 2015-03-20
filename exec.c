@@ -70,6 +70,13 @@ void	del_list(t_list *env_list, char *key)
 
 	tmp = env_list;
 	var = tmp->content;
+	if (!ft_strcmp(var->key, key))
+		{
+			env_list = env_list->next;
+			free_env_list(tmp);
+			print_env(env_list);
+			return ;
+		}
 	while (tmp->next && ft_strcmp(var->key, key))
 	{
 		var = tmp->next->content;
@@ -84,7 +91,13 @@ void	del_list(t_list *env_list, char *key)
 	}
 	del = tmp->next;
 	tmp->next = del->next;
-	printf("PASSE %d\n", (int)tmp);
+	free_env_list(del);
+	print_env(env_list);
+}
+
+void	free_env_list(t_list *del)
+{
 	free(del->content);
+	free(del->next);
 	free(del);
 }

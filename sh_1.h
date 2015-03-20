@@ -39,5 +39,7 @@ char		**env_to_str(t_list *env_list);
 void		set_env(char **argv, t_list **env_list);
 void		unset_env(char **argv, t_list **env_list);
 void		del_list(t_list *env_list, char *key);
+void		free_t_var(t_var_list *var);
+void		free_env_list(t_list *del);
 
 #endif

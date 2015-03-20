@@ -80,7 +80,7 @@ void	set_env(char **argv, t_list **env_list)
 		{
 			var->key = argv[1];
 			var->data = argv[2];
-			ft_lstsmartpushback(env_list,
+			ft_lstpushback(env_list,
 			ft_lstnew(var, (sizeof(t_var_list))));
 		}
 		else
