@@ -26,24 +26,24 @@ int 	main(int ac, char **av, char **env)
 		print_prompt(env_list);
 		get_next_line(0, &line);
 		argv = ft_strsplit(ft_strtrim(line), ' ');
-		if (!command(argv, env_list))
-			exec(argv, env_list);
+		if (!command(argv, &env_list))
+			exec(argv, env_list);	
 	}
 	return (0);
 }
 
-int		command(char **argv, t_list *env_list)
+int		command(char **argv, t_list **env_list)
 {
 	if (!argv[0])
 		return(1);
 	else if (!ft_strcmp(argv[0], "cd"))
-		cd(argv, env_list);
+		cd(argv, *env_list);
 	else if (!ft_strcmp(argv[0], "env"))
-		print_env(env_list);
+		print_env(*env_list);
 	else if (!ft_strcmp(argv[0], "setenv"))
-		set_env(argv, &env_list);
+		set_env(argv, env_list);
 	else if (!ft_strcmp(argv[0], "unsetenv"))
-		unset_env(argv, &env_list);
+		unset_env(argv, env_list);
 	else
 		return (0);
 	return (1);
@@ -99,7 +99,7 @@ void	unset_env(char **argv, t_list **env_list)
 	{
 		while (argv[i])
 		{
-			del_list(*env_list, argv[i]);
+			del_list(env_list, argv[i]);
 			i++;
 		}
 	}
