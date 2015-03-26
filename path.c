@@ -12,10 +12,10 @@
 
 #include "sh_1.h"
 
-t_list*	get_path(char **env)
+t_list	*get_path(char **env)
 {
-	int i;
-	t_list *env_list;
+	int		i;
+	t_list	*env_list;
 
 	i = 0;
 	env_list = NULL;
@@ -30,16 +30,23 @@ t_list*	get_path(char **env)
 void	fill_list(char *line, t_list **env_list)
 {
 	t_var_list	var;
+	int			lvl;
 
 	var.key = ft_strcut(line, '=');
 	var.data = ft_strchr(line, '=') + 1;
+	if (!ft_strcmp(var.key, "SHLVL"))
+	{
+		lvl = ft_atoi(var.data);
+		lvl += 1;
+		var.data = ft_itoa(lvl);
+	}
 	ft_lstsmartpushback(env_list,
 		ft_lstnew(&var, (sizeof(t_var_list))));
 }
 
 void	print_env(t_list *env_list)
 {
-	t_var_list *var;
+	t_var_list	*var;
 
 	while (env_list)
 	{
@@ -52,11 +59,11 @@ void	print_env(t_list *env_list)
 	}
 }
 
-char **env_to_str(t_list *env_list)
+char	**env_to_str(t_list *env_list)
 {
-	t_list *tmp;
-	char **env_str;
-	int i;
+	t_list		*tmp;
+	char		**env_str;
+	int			i;
 	t_var_list	*var;
 
 	i = 0;
@@ -64,7 +71,7 @@ char **env_to_str(t_list *env_list)
 	while (tmp)
 		i++, tmp = tmp->next;
 	if (!(env_str = malloc(sizeof(char **) * i + 1)))
-		return NULL;
+		return (NULL);
 	env_str[i] = 0;
 	i = 0;
 	while (env_list)

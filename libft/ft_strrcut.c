@@ -21,8 +21,10 @@ char	*ft_strrcut(char *str, char c)
 	if (!c)
 		return (str);
 	i = ft_strlen(str) - 1;
-	while (str[i] && str[i] != c)
+	while (i >= 0 && str[i] && str[i] != c)
 		i--;
+	if (i == -1)
+		return (str);
 	ret = malloc((sizeof(char) * i));
 	ret[i] = 0;
 	while (i--)

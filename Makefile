@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME	=	ft_minishell1
-SRC		=	main.c path.c exec.c cd.c libft/get_next_line.c
+SRC		=	main.c path.c exec.c cd.c built_in.c env.c libft/get_next_line.c
 OBJ		=	$(SRC:.c=.o)
 HDR		=	libft/
 FLAGS	=	-Wall -Wextra -Werror
